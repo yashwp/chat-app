@@ -20,14 +20,14 @@ io.on('connection', (socket) => {
     });
     
     socket.on('createMessage', (msg) => {
-        console.log('New message from client', msg);
+        // console.log('New message from client', msg);
+        io.emit('newMessage', {
+            from: msg.from,
+            text: msg.text,
+            createdAt: new Date().getTime() 
+        });
     });
 
-    socket.emit('newMessage', {
-        from: 'demp@gmail.com',
-        text: 'My first socket app',
-        createdAt: new Date().getTime() 
-    });
 });
 
 server.listen(port, () => {
