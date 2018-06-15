@@ -28,13 +28,13 @@ $(document).ready(function() {
     $('#message-form').on('submit', function(e) {
         e.preventDefault();
 
+        var messageTextbox = $('[name=message]');
         socket.emit('createMessage', {
             from: 'User',
-            text: $('[name=message]').val()
-        }, function(data){
-            console.log('Got it!', data);
+            text: messageTextbox.val()
+        }, function(){
+            messageTextbox.val('');
         });
-        $('[name=message]').val('');
     });
 
 
@@ -43,13 +43,15 @@ $(document).ready(function() {
         if (!navigator.geolocation) {
             return alert('Use a good browser');
         }
-
-        navigator.geolocation.getCurrentPosition(function(pos){
+        locationBtn.attr('disabled', 'disabled').text('Sending location...');
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            locationBtn.removeAttr('disabled').text('Send location');
             socket.emit('createLocationMessage', {
                 lat: pos.coords.latitude,
                 lng: pos.coords.longitude
-            })
-        }, function(){
+            });
+        }, function() {
+            locationBtn.removeAttr('disabled').text('Send location');
             alert('Unable to fetch location')
         });
     });
